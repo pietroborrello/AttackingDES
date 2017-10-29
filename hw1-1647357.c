@@ -89,6 +89,7 @@ int next_key(unsigned char key[8]) {
 }
 
 void *search_in_key_space(void *args) {
+  uint64_t id = (uint64_t)args;
   unsigned char key[8] = {0};
   gcry_cipher_hd_t crypter;
   unsigned char in[CORRECT_SIZE(sizeof(plain))] = {0};
@@ -96,6 +97,9 @@ void *search_in_key_space(void *args) {
   gpg_error_t err = 0;
 
   int n = CORRECT_SIZE(sizeof(plain));
+
+  // diving search space for keys, differentiating starting points
+  key[COMPLEXITY - 1] = id << 5; //(8-log(num_treads))
 
   if (!crypted)
     return NULL;
@@ -107,15 +111,13 @@ void *search_in_key_space(void *args) {
     return NULL;
   }
 
-  printf(ANSI_COLOR_CYAN "starting bruteforce on key..." ANSI_COLOR_RESET "\n");
-
   while (1) {
 
     err = gcry_cipher_setkey(crypter, key, keylen);
     if (err) {
       if (gcry_err_code(err) == GPG_ERR_WEAK_KEY) {
         goto next;
-        continue;
+        // continue;
       }
       printf(ANSI_COLOR_RED "set key failed: %s" ANSI_COLOR_RESET "\n",
              gpg_strerror(err));
@@ -159,9 +161,12 @@ int main() {
 
   crypted = init_crypt();
 
+  printf(ANSI_COLOR_CYAN "starting bruteforce on key..." ANSI_COLOR_RESET "\n");
+
   for (uint64_t i = 0; i < THREAD_NUM; i++) {
     pthread_create(&tids[i], NULL, search_in_key_space, (void *)i);
   }
+
   for (int i = 0; i < THREAD_NUM; i++) {
     pthread_join(tids[i], NULL);
   }

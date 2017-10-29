@@ -16,7 +16,7 @@
 #define CORRECT_SIZE(x) (((x + 7) / 8) * 8)
 #define MAX_ITERATIONS (72057594037927936)
 #define SCALE_ITERATION (128)
-#define COMPLEXITY (3)
+#define COMPLEXITY (5)
 #define THREAD_NUM (8)
 
 // init the known plaintext - cihpertext pair
