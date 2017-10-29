@@ -17,7 +17,7 @@
 #define MAX_ITERATIONS (72057594037927936)
 #define SCALE_ITERATION (128)
 #define COMPLEXITY (3)
-#define THREAD_NUM 8
+#define THREAD_NUM (8)
 
 // init the known plaintext - cihpertext pair
 unsigned char *init_crypt();

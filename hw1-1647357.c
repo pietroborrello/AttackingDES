@@ -71,7 +71,7 @@ int next_key(unsigned char key[8]) {
     key[i] += to_sum[i];
     if (key[i] < temp) {
       if (i == COMPLEXITY - 2) {
-        // not as critical section to performance reasons:
+        // not in mutial exclusion for performance reasons:
         // increasing tick is not too frequent and
         // missing a tick won't ruin progress status
         tick++;
@@ -88,9 +88,7 @@ int next_key(unsigned char key[8]) {
   return 0;
 }
 
-// void *search_in_key_space(void *args) {}
-
-int main() {
+void *search_in_key_space(void *args) {
   unsigned char key[8] = {0};
   gcry_cipher_hd_t crypter;
   unsigned char in[CORRECT_SIZE(sizeof(plain))] = {0};
@@ -99,16 +97,14 @@ int main() {
 
   int n = CORRECT_SIZE(sizeof(plain));
 
-  crypted = init_crypt();
-
   if (!crypted)
-    return -1;
+    return NULL;
 
   err = gcry_cipher_open(&crypter, GCRY_CIPHER_DES, GCRY_CIPHER_MODE_CBC, 0);
   if (err) {
     printf(ANSI_COLOR_RED "open cipher failed: %s" ANSI_COLOR_RESET "\n",
            gpg_strerror(err));
-    return -1;
+    return NULL;
   }
 
   printf(ANSI_COLOR_CYAN "starting bruteforce on key..." ANSI_COLOR_RESET "\n");
@@ -124,7 +120,7 @@ int main() {
       printf(ANSI_COLOR_RED "set key failed: %s" ANSI_COLOR_RESET "\n",
              gpg_strerror(err));
       gcry_cipher_close(crypter);
-      return -1;
+      return NULL;
     }
     /*printf("key: ");
     for (int i = 0; i < sizeof(key); i++) {
@@ -135,7 +131,7 @@ int main() {
     if (err) {
       printf("decryption failed: %s\n", gpg_strerror(err));
       gcry_cipher_close(crypter);
-      return -1;
+      return NULL;
     }
     gcry_cipher_reset(crypter);
 
@@ -143,9 +139,10 @@ int main() {
       break;
   next:
     if (next_key(key)) {
-      printf(ANSI_COLOR_RED "key not found\n" ANSI_COLOR_RESET);
+      // printf(ANSI_COLOR_RED "key not found: plaintext-cyphertext pair
+      // invalid\n" ANSI_COLOR_RESET);
       gcry_cipher_close(crypter);
-      return -1;
+      return NULL;
     }
   }
   printf(ANSI_COLOR_GREEN "\ndecryption OK\n");
@@ -154,4 +151,20 @@ int main() {
     printf("%02x", key[i]);
   }
   printf(ANSI_COLOR_RESET "\n");
+  exit(0); // found key, all done
+}
+
+int main() {
+  pthread_t tids[THREAD_NUM];
+
+  crypted = init_crypt();
+
+  for (uint64_t i = 0; i < THREAD_NUM; i++) {
+    pthread_create(&tids[i], NULL, search_in_key_space, (void *)i);
+  }
+  for (int i = 0; i < THREAD_NUM; i++) {
+    pthread_join(tids[i], NULL);
+  }
+  printf(ANSI_COLOR_RED
+         "key not found: plaintext-cyphertext pair invalid\n" ANSI_COLOR_RESET);
 }
