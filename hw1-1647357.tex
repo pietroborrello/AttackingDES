@@ -35,18 +35,35 @@
   \begin{center}
     \begin{tabular}{ | c | c | c | c | c | c | c | c |}
       \hline
-      0 & 0 & 0 & x & x & x & x & x  \\
+      $x_0$ & $x_1$ & $x_2$ & $x_3$ & $x_4$ & 0 & 0 & 0 \\
       \hline
     \end{tabular}
   \end{center}
-  and only the unknown bytes set to $x$ have to be cracked.
+  and only the unknown bytes set to $x_i$ have to be cracked.
 
   Therefore a $COMPLEXITY$ set to 8 means a full DES crack. All the unfixed bytes are randomized, to provide a performance estimation on the average case and not only in the worst case, that would be obtained fixing the bytes at $0xff$.
 
   The key enumeration in the bruteforce as to be made carefully: to be noticed is that not all the libraries (and neither \textit{libgcrypt}) check parity bits, simplifying the code of the key enumeration. So a careless designer could think that the key enumeration could be simply done increasing a long integer index in a 64bit environment. This naive implementation would increase key space from $2^{56}$ to $2^{64}$.
   Our implementation, considered not naive, is a simple reimplementation of carriage addition in algebra considering only 7 bits out of 8. The snippet of the code follows:
+  \bigskip
+  \begin{verbatim}
+int next_key(unsigned char key[8]) {
+  unsigned char to_sum[8] = {2, 0, 0, 0, 0, 0, 0, 0};
 
-  
+  for (int i = 0; i < 8; i++) {
+    unsigned char temp = key[i];
+    key[i] += to_sum[i];
+    if (key[i] < temp) {
+      if (i < 7)
+        to_sum[i + 1] += 2;
+      else
+        return -1; //
+    }
+  }
+  return 0;
+}
+
+  \end{verbatim}
 
 
   \begin{thebibliography}{99}

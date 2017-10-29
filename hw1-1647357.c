@@ -79,7 +79,7 @@ int next_key(unsigned char key[8]) {
         printf("\rsearching in key space: %0.2f%%", progress * 100);
         fflush(stdout);
       }
-      if (i < 7)
+      if (i < COMPLEXITY - 1)
         to_sum[i + 1] += 2;
       else
         return -1;
