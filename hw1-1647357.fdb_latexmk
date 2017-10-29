@@ -1,5 +1,5 @@
 # Fdb version 3
-["pdflatex"] 1509296072 "hw1-1647357.tex" "hw1-1647357.pdf" "hw1-1647357" 1509296073
+["pdflatex"] 1509302191 "hw1-1647357.tex" "hw1-1647357.pdf" "hw1-1647357" 1509302192
   "/usr/local/texlive/2017/texmf-dist/fonts/map/fontname/texfonts.map" 1480098670 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2017/texmf-dist/fonts/tfm/public/cm/cmbx12.tfm" 1480098701 1324 c910af8c371558dc20f2d7822f66fe64 ""
   "/usr/local/texlive/2017/texmf-dist/fonts/tfm/public/cm/cmmi10.tfm" 1480098701 1528 abec98dbc43e172678c11b3b9031252a ""
@@ -54,9 +54,9 @@
   "/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1495593472 2350277 a699055bee05bf8a40b0504752487295 ""
   "/usr/local/texlive/2017/texmf-var/web2c/pdftex/pdflatex.fmt" 1498258926 4129592 ee5e2f8b8f42bed0f1815199da9d5b70 ""
   "/usr/local/texlive/2017/texmf.cnf" 1495593465 577 2b71d4d888f9e5560b2e99985915a9fa ""
-  "hw1-1647357.aux" 1509296073 490 02d8100872537923e23b63f23f994327 ""
-  "hw1-1647357.tex" 1509296072 4744 ffa59312bbac7182e039bbafe38bd657 ""
+  "hw1-1647357.aux" 1509302192 678 7100b1ff1157aca2a4d47c0a5f3dadc9 ""
+  "hw1-1647357.tex" 1509302191 6976 80734c0a1770dda65868237f6b319b16 ""
   (generated)
-  "hw1-1647357.aux"
-  "hw1-1647357.pdf"
   "hw1-1647357.log"
+  "hw1-1647357.pdf"
+  "hw1-1647357.aux"
