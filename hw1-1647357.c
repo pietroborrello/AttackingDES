@@ -70,12 +70,12 @@ int next_key(unsigned char key[8]) {
     unsigned char temp = key[i];
     key[i] += to_sum[i];
     if (key[i] < temp) {
-      if (i == COMPLEXITY - 2) {
+      if (i == COMPLEXITY - 3) {
         // not in mutial exclusion for performance reasons:
         // increasing tick is not too frequent and
         // missing a tick won't ruin progress status
         tick++;
-        double progress = (double)tick / 128;
+        double progress = (double)tick / (128 * 128);
         printf("\rsearching in key space: %0.2f%%", progress * 100);
         fflush(stdout);
       }
@@ -99,7 +99,7 @@ void *search_in_key_space(void *args) {
   int n = CORRECT_SIZE(sizeof(plain));
 
   // diving search space for keys, differentiating starting points
-  key[COMPLEXITY - 1] = id << 5; //(8-log(num_treads))
+  key[COMPLEXITY - 1] = id << 4; //(8-log(num_treads))
 
   if (!crypted)
     return NULL;
